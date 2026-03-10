@@ -209,3 +209,4 @@ __marimo__/
 *.nii
 *.csv
 *.gz
+*.npy
