@@ -2,6 +2,8 @@ from torch.utils.data import Dataset
 import pandas as pd
 import os
 from torchvision.io import decode_image
+import numpy as np
+import torch
 
 class ODELIA_DATASET(Dataset):
     def __init__(self, annotation_file, img_dir, transform=None):
@@ -14,8 +16,14 @@ class ODELIA_DATASET(Dataset):
     
     def __getitem__(self, index):
         img_path = os.path.join(self.img_dir, self.image_labels.iloc[index, 0])
-        image = decode_image(img_path)
+        arr = np.load(img_path)
+        difference_in_scans = 8 - arr.shape[0]
+        if difference_in_scans != 0:
+            padding = np.zeros((difference_in_scans, 32, 256, 256))
+            arr = np.concatenate([arr, padding], axis=0)
+        image = torch.from_numpy(arr).float()
         label = self.image_labels.iloc[index, -1]
+        label = torch.tensor(label, dtype=torch.long)
         if self.transform:
-            self.transform(image)
+            image = self.transform(image)
         return image, label
