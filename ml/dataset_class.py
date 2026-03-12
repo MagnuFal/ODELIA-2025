@@ -15,7 +15,7 @@ class ODELIA_DATASET(Dataset):
         return len(self.image_labels)
     
     def __getitem__(self, index):
-        img_path = os.path.join(self.img_dir, self.image_labels.iloc[index, 0])
+        img_path = os.path.join(self.img_dir, self.image_labels.iloc[index, 0] + ".npy")
         arr = np.load(img_path)
         difference_in_scans = 8 - arr.shape[0]
         if difference_in_scans != 0:
@@ -24,6 +24,6 @@ class ODELIA_DATASET(Dataset):
         image = torch.from_numpy(arr).float()
         label = self.image_labels.iloc[index, -1]
         label = torch.tensor(label, dtype=torch.long)
-        if self.transform:
-            image = self.transform(image)
-        return image, label
+        if self.transforms:
+            image = self.transforms(image)
+        return image, label, self.image_labels.iloc[index, 0]

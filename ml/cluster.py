@@ -2,16 +2,18 @@ from torch.utils.data import DataLoader, random_split
 from .dataset_class import ODELIA_DATASET
 import torch
 from monai.networks.nets import DenseNet121
+from .optimization import optimizer_loop
+from torchinfo import summary
 
 if __name__ == "__main__":
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    annotation_file = r""
-    img_dir = r""
-    save_checkpoint_path = r""
+    annotation_file = r"C:\Users\magfa\Documents\ODELIA-2025\annotation_CAM_MHA_RUMC_UKA.csv"
+    img_dir = r"C:\Users\magfa\Documents\ODELIA-2025\training_data"
+    save_checkpoint_path = r"C:\Users\magfa\Documents\ODELIA-2025\checkpoints\first_test.pth"
 
-    dataset = ODELIA_DATASET(annotation_file=r"", img_dir=r"")
+    dataset = ODELIA_DATASET(annotation_file=annotation_file, img_dir=img_dir)
 
     val_percent = 0.1
 
@@ -25,3 +27,6 @@ if __name__ == "__main__":
 
     model = DenseNet121(spatial_dims = 3, in_channels = 8, out_channels = 3, pretrained=False).to(device)
 
+    weights = torch.tensor([0.477046, 3.319444, 1.659722]).to(device)
+
+    optimizer_loop(model=model, train_loader=train_loader, val_loader=val_loader, save_path=save_checkpoint_path)

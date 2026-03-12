@@ -211,3 +211,4 @@ __marimo__/
 *.gz
 *.npy
 *.ipynb
+*.txt
