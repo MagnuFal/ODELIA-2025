@@ -34,6 +34,8 @@ def test(model, dataloader, save_path, weights = None):
     num_batches = len(dataloader)
     test_loss, correct = 0, 0
     predictions = f"{save_path.stem}_probs.txt"
+    with open(predictions, "w") as f:
+        f.write(f"UID, Prob. Normal, Prob. Benign, Prob. Malignant\n")
 
     with torch.no_grad():
         for X, y, uid in dataloader:
