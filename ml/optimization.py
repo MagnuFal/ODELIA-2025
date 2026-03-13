@@ -25,7 +25,7 @@ def train(model, dataloader, learning_rate = 1e-3, batch_size = 8, weights = Non
             loss, current = loss.item(), batch * batch_size + len(X)
             print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
     
-    return optimizer.state_dict()
+    return optimizer.state_dict(), loss
 
 def test(model, dataloader, save_path, weights = None):
     model.eval()
@@ -43,7 +43,7 @@ def test(model, dataloader, save_path, weights = None):
             test_loss += loss_fn(pred, y).item()
             correct += (pred.argmax(1) == y).type(torch.float).sum().item()
             probs = torch.softmax(pred, dim = 1)
-            with open(predictions, "w") as f:
+            with open(predictions, "a") as f:
                 for i in range(len(uid)):
                     f.write(f"{uid[i]}, {probs[i,0]}, {probs[i,1]}, {probs[i,2]}\n")
 
@@ -51,27 +51,33 @@ def test(model, dataloader, save_path, weights = None):
     correct /= size
     print(f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
 
-    return test_loss, predictions
+    return test_loss, predictions #Is there any reason it's returning predictions?
+
+def save_best_model(model, epoch, opt_state, best_loss, save_path):
+    torch.save({
+            "epoch" : epoch + 1,
+            "model_state_dict" : model.state_dict(),
+            "optimizer_state_dict" : opt_state,
+            "loss" : best_loss
+            }, save_path)
 
 def optimizer_loop(model, train_loader, val_loader, save_path, epochs = 50):
     best_val_loss = 0
     file_path = Path(save_path)
     loss_log = f"{file_path.stem}_loss_log.txt"
+    with open(loss_log, "a") as f:
+        f.write(f"Epoch, Val_Loss, Train_Loss\n")
     for i in range(epochs):
         print(f"----------Epoch {i + 1}----------")
-        opt_state_dict = train(model, train_loader)
-        val_loss = test(model, val_loader, file_path)
+        opt_state_dict, train_loss = train(model, train_loader)
+        val_loss, _ = test(model, val_loader, file_path)
         with open(loss_log, "a") as f:
-            f.write(f"{i + 1}, {val_loss}\n")
+            f.write(f"{i + 1}, {val_loss}, {train_loss}\n")
         if i == 0:
             best_val_loss = val_loss
+            save_best_model(model, i, opt_state_dict, best_val_loss, save_path)
         elif val_loss < best_val_loss:
             best_val_loss = val_loss
-            torch.save({
-                "epoch" : i + 1,
-                "model_state_dict" : model.state_dict(),
-                "optimizer_state_dict" : opt_state_dict,
-                "loss" : best_val_loss
-            }, save_path)
+            save_best_model(model, i, opt_state_dict, best_val_loss, save_path)
             print(f"Best Validation Loss Updated: {best_val_loss}")
     print(f"Finished! - Best Validation Loss: {best_val_loss}")
