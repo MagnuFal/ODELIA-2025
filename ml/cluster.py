@@ -11,7 +11,7 @@ if __name__ == "__main__":
 
     annotation_file = r"/cluster/home/magnufal/TDT4265/annotation_CAM_MHA_RUMC_UKA.csv"
     img_dir = r"/cluster/home/magnufal/TDT4265/training_data"
-    save_checkpoint_path = r"/cluster/home/magnufal/TDT4265/checkpoints/first_test_on_idun.pth"
+    save_checkpoint_path = r"/cluster/home/magnufal/TDT4265/checkpoints/baseline.pth"
 
     dataset = ODELIA_DATASET(annotation_file=annotation_file, img_dir=img_dir)
 
@@ -29,4 +29,4 @@ if __name__ == "__main__":
 
     weights = torch.tensor([0.477046, 3.319444, 1.659722]).to(device)
 
-    optimizer_loop(model=model, train_loader=train_loader, val_loader=val_loader, save_path=save_checkpoint_path)
+    optimizer_loop(model=model, train_loader=train_loader, val_loader=val_loader, save_path=save_checkpoint_path, epochs=120)
