@@ -45,16 +45,31 @@ def concat_two_annotation_dataframes(df1, df2):
     df3 = pd.concat([df1, df2], ignore_index=True)
     return df3
 
+def txt_to_csv(txt_file_path, save_path):
+    df = pd.read_csv(txt_file_path)
+    df.to_csv(save_path, index = False)
+
+def make_arb_annotation_RSH(RSH_folder_path, save_folder_path):
+    with open(r"C:\Users\magfa\Documents\ODELIA-2025\RSH_dataset\annotaion.txt", "w") as f:
+        f.write("UID, PatientID, Age, Lesion\n")
+    RSH_folder = Path(RSH_folder_path)
+    for file in RSH_folder.iterdir():
+        with open(r"C:\Users\magfa\Documents\ODELIA-2025\RSH_dataset\annotaion.txt", "a") as f:
+            f.write(f"{file.stem}, 0, 0, 0\n")
+    txt_to_csv(r"C:\Users\magfa\Documents\ODELIA-2025\RSH_dataset\annotaion.txt", save_folder_path)
+
 if __name__ == "__main__":
-    anno1 = r"C:\Users\magfa\Documents\ODELIA-2025\odelia_dataset\CAM\metadata_unilateral\annotation.csv"
-    anno2 = r"C:\Users\magfa\Documents\ODELIA-2025\odelia_dataset\MHA\metadata_unilateral\annotation.csv"
-    anno3 = r"C:\Users\magfa\Documents\ODELIA-2025\odelia_dataset\RUMC\metadata_unilateral\annotation.csv"
-    anno4 = r"C:\Users\magfa\Documents\ODELIA-2025\odelia_dataset\UKA\metadata_unilateral\annotation.csv"
+    #anno1 = r"C:\Users\magfa\Documents\ODELIA-2025\odelia_dataset\CAM\metadata_unilateral\annotation.csv"
+    #anno2 = r"C:\Users\magfa\Documents\ODELIA-2025\odelia_dataset\MHA\metadata_unilateral\annotation.csv"
+    #anno3 = r"C:\Users\magfa\Documents\ODELIA-2025\odelia_dataset\RUMC\metadata_unilateral\annotation.csv"
+    #anno4 = r"C:\Users\magfa\Documents\ODELIA-2025\odelia_dataset\UKA\metadata_unilateral\annotation.csv"
+#
+    #df1, df2, df3, df4 = pd.read_csv(anno1), pd.read_csv(anno2), pd.read_csv(anno3), pd.read_csv(anno4)
+#
+    #df5 = concat_two_annotation_dataframes(df1, df2)
+    #df6 = concat_two_annotation_dataframes(df5, df3)
+    #df7 = concat_two_annotation_dataframes(df6, df4)
+#
+    #df7.to_csv(r"C:\Users\magfa\Documents\ODELIA-2025\annotation_CAM_MHA_RUMC_UKA.csv", index = False)
 
-    df1, df2, df3, df4 = pd.read_csv(anno1), pd.read_csv(anno2), pd.read_csv(anno3), pd.read_csv(anno4)
-
-    df5 = concat_two_annotation_dataframes(df1, df2)
-    df6 = concat_two_annotation_dataframes(df5, df3)
-    df7 = concat_two_annotation_dataframes(df6, df4)
-
-    df7.to_csv(r"C:\Users\magfa\Documents\ODELIA-2025\annotation_CAM_MHA_RUMC_UKA.csv", index = False)
+    make_arb_annotation_RSH(r"C:\Users\magfa\Documents\ODELIA-2025\RSH_dataset\RSH_np_arrays", r"C:\Users\magfa\Documents\ODELIA-2025\RSH_dataset\annotation.csv")
