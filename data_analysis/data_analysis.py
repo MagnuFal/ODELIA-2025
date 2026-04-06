@@ -51,12 +51,15 @@ def txt_to_csv(txt_file_path, save_path):
 
 def make_arb_annotation_RSH(RSH_folder_path, save_folder_path):
     with open(r"C:\Users\magfa\Documents\ODELIA-2025\RSH_dataset\annotaion.txt", "w") as f:
-        f.write("UID, PatientID, Age, Lesion\n")
+        lst = []
     RSH_folder = Path(RSH_folder_path)
     for file in RSH_folder.iterdir():
-        with open(r"C:\Users\magfa\Documents\ODELIA-2025\RSH_dataset\annotaion.txt", "a") as f:
-            f.write(f"{file.stem}, 0, 0, 0\n")
-    txt_to_csv(r"C:\Users\magfa\Documents\ODELIA-2025\RSH_dataset\annotaion.txt", save_folder_path)
+        lst.append({"UID" : f"{file.stem}",
+                    "PatientID" : 0,
+                    "Age" : 0,
+                    "Lesion" : 0},)
+    df = pd.DataFrame(lst)
+    df.to_csv(rf"{save_folder_path}", index = False)
 
 if __name__ == "__main__":
     #anno1 = r"C:\Users\magfa\Documents\ODELIA-2025\odelia_dataset\CAM\metadata_unilateral\annotation.csv"
