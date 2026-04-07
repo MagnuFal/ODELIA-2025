@@ -41,8 +41,7 @@ if __name__ == "__main__":
                               train_split=False,
                               iterator_train__num_workers=0,
                               iterator_train__pin_memory=False,
-                              device = device,
-                              n_jobs = 1,)
+                              device = device,)
 
     params = {
         "lr" : uniform(0.001, 0.1),
@@ -51,7 +50,7 @@ if __name__ == "__main__":
         "optimizer__nesterov" : [False, True],
     }
 
-    rs = RandomizedSearchCV(net, params, n_iter=10, refit=True, cv=3, scoring="roc_auc_ovr", verbose = 2)
+    rs = RandomizedSearchCV(net, params, n_iter=10, refit=True, cv=3, scoring="roc_auc_ovr", verbose = 2, n_jobs=1)
 
     rs.fit(X_sl, y_sl)
 
