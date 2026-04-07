@@ -10,11 +10,13 @@ from torch.utils.data import DataLoader
 import pickle
 from scipy.stats import uniform
 import torch.nn as nn
+import time
 
 def create_net():
     return DenseNet121(spatial_dims = 3, in_channels = 8, out_channels = 3)
 
 if __name__ == "__main__":
+    start_time = time.perf_counter()
 
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
@@ -34,7 +36,7 @@ if __name__ == "__main__":
 
     net = NeuralNetClassifier(module=create_net,
                               criterion=nn.CrossEntropyLoss,
-                              max_epochs = 50, # Reduced max_epochs for RandomSearch
+                              max_epochs = 30, # Reduced max_epochs for RandomSearch
                               lr = 1e-3, # Same opt_mom and lr as baseline model
                               optimizer__momentum = 0,
                               verbose = 1,
@@ -57,3 +59,7 @@ if __name__ == "__main__":
     print(f"Best Score: {rs.best_score_}, Best Parameters: {rs.best_params_}")
 
     rs.best_estimator_.save_params(f_params=save_checkpoint_path)
+
+    end_time = time.perf_counter()
+
+    print(f"Execution time: {end_time - start_time:.4f} seconds")
