@@ -9,6 +9,7 @@ from .dataset_class import ODELIA_SKORCH_DATASET
 from torch.utils.data import DataLoader
 import pickle
 from scipy.stats import uniform
+import torch.nn as nn
 
 def create_net():
     return DenseNet121(spatial_dims = 3, in_channels = 8, out_channels = 3)
@@ -32,6 +33,7 @@ if __name__ == "__main__":
     model = DenseNet121(spatial_dims = 3, in_channels = 8, out_channels = 3)
 
     net = NeuralNetClassifier(module=create_net,
+                              criterion=nn.CrossEntropyLoss,
                               max_epochs = 1, # Reduced max_epochs for RandomSearch
                               lr = 1e-3, # Same opt_mom and lr as baseline model
                               optimizer__momentum = 0,
