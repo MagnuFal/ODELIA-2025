@@ -15,7 +15,7 @@ def create_net():
 
 if __name__ == "__main__":
 
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     annotation_file = r"/cluster/home/magnufal/TDT4265/annotation_CAM_MHA_RUMC_UKA.csv"
     img_dir = r"/cluster/home/magnufal/TDT4265/training_data"
@@ -32,11 +32,13 @@ if __name__ == "__main__":
     model = DenseNet121(spatial_dims = 3, in_channels = 8, out_channels = 3)
 
     net = NeuralNetClassifier(module=create_net,
-                              max_epochs = 50, # Reduced max_epochs for RandomSearch
+                              max_epochs = 1, # Reduced max_epochs for RandomSearch
                               lr = 1e-3, # Same opt_mom and lr as baseline model
                               optimizer__momentum = 0,
                               verbose = 0,
                               train_split=False,
+                              iterator_train__num_workers=4,
+                              iterator_train__pin_memory=True,
                               device = device,)
 
     params = {
@@ -46,7 +48,7 @@ if __name__ == "__main__":
         "optimizer__nesterov" : [False, True],
     }
 
-    rs = RandomizedSearchCV(net, params, n_iter=3, refit=True, cv=3, scoring="roc_auc_ovr", verbose = 2)
+    rs = RandomizedSearchCV(net, params, n_iter=1, refit=True, cv=2, scoring="roc_auc_ovr", verbose = 2)
 
     rs.fit(X_sl, y_sl)
 
