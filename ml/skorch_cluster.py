@@ -39,9 +39,10 @@ if __name__ == "__main__":
                               optimizer__momentum = 0,
                               verbose = 1,
                               train_split=False,
-                              iterator_train__num_workers=8,
-                              iterator_train__pin_memory=True,
-                              device = device,)
+                              iterator_train__num_workers=0,
+                              iterator_train__pin_memory=False,
+                              device = device,
+                              n_jobs = 1,)
 
     params = {
         "lr" : uniform(0.001, 0.1),
