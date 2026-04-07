@@ -35,7 +35,7 @@ if __name__ == "__main__":
                               max_epochs = 1, # Reduced max_epochs for RandomSearch
                               lr = 1e-3, # Same opt_mom and lr as baseline model
                               optimizer__momentum = 0,
-                              verbose = 0,
+                              verbose = 1,
                               train_split=False,
                               iterator_train__num_workers=2,
                               iterator_train__pin_memory=True,
