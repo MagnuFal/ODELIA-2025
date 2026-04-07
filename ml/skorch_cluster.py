@@ -37,7 +37,7 @@ if __name__ == "__main__":
                               optimizer__momentum = 0,
                               verbose = 0,
                               train_split=False,
-                              iterator_train__num_workers=4,
+                              iterator_train__num_workers=2,
                               iterator_train__pin_memory=True,
                               device = device,)
 
