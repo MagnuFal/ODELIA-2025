@@ -34,23 +34,23 @@ if __name__ == "__main__":
 
     net = NeuralNetClassifier(module=create_net,
                               criterion=nn.CrossEntropyLoss,
-                              max_epochs = 1, # Reduced max_epochs for RandomSearch
+                              max_epochs = 50, # Reduced max_epochs for RandomSearch
                               lr = 1e-3, # Same opt_mom and lr as baseline model
                               optimizer__momentum = 0,
                               verbose = 1,
                               train_split=False,
-                              iterator_train__num_workers=2,
+                              iterator_train__num_workers=8,
                               iterator_train__pin_memory=True,
                               device = device,)
 
     params = {
         "lr" : uniform(0.001, 0.1),
         "optimizer__momentum" : uniform(0, 0.9),
-        "batch_size" : [4, 8, 16],
+        "batch_size" : [8, 16, 32],
         "optimizer__nesterov" : [False, True],
     }
 
-    rs = RandomizedSearchCV(net, params, n_iter=1, refit=True, cv=2, scoring="roc_auc_ovr", verbose = 2)
+    rs = RandomizedSearchCV(net, params, n_iter=10, refit=True, cv=3, scoring="roc_auc_ovr", verbose = 2)
 
     rs.fit(X_sl, y_sl)
 
