@@ -25,7 +25,7 @@ if __name__ == "__main__":
     #annotation_file = r"C:\Users\magfa\Documents\ODELIA-2025\RSH_dataset\annotation.csv"
     #img_dir = r"C:\Users\magfa\Documents\ODELIA-2025\RSH_dataset\RSH_np_arrays"
     #save_checkpoint_path = r"C:\Users\magfa\Documents\ODELIA-2025\checkpoints\skorch_run_1.pth"
-    save_checkpoint_path = r"/cluster/home/magnufal/TDT4265/checkpoints/skorch_run_1.pt"
+    save_checkpoint_path = r"/cluster/home/magnufal/TDT4265/checkpoints/skorch_run_2.pt"
 
     dataset = ODELIA_SKORCH_DATASET(annotation_file=annotation_file, img_dir=img_dir)
 
@@ -46,10 +46,10 @@ if __name__ == "__main__":
                               device = device,)
 
     params = {
-        "lr" : uniform(0.001, 0.1),
-        "optimizer__momentum" : uniform(0, 1.5),
-        "batch_size" : [8, 16, 32],
-        "optimizer__nesterov" : [False, True],
+        "lr" : uniform(0.008, 0.02),
+        "optimizer__momentum" : uniform(0.7, 0.9),
+        "batch_size" : [32],
+        "optimizer__nesterov" : [True],
     }
 
     rs = RandomizedSearchCV(net, params, n_iter=10, refit=True, cv=3, scoring="roc_auc_ovr", verbose = 2, n_jobs=1)
