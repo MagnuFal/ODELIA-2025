@@ -25,7 +25,7 @@ if __name__ == "__main__":
     #annotation_file = r"C:\Users\magfa\Documents\ODELIA-2025\RSH_dataset\annotation.csv"
     #img_dir = r"C:\Users\magfa\Documents\ODELIA-2025\RSH_dataset\RSH_np_arrays"
     #save_checkpoint_path = r"C:\Users\magfa\Documents\ODELIA-2025\checkpoints\skorch_run_1.pth"
-    save_checkpoint_path = r"/cluster/home/magnufal/TDT4265/checkpoints/skorch_run_2.pt"
+    save_checkpoint_path = r"/cluster/home/magnufal/TDT4265/checkpoints/skorch_run_fine_search.pt"
 
     dataset = ODELIA_SKORCH_DATASET(annotation_file=annotation_file, img_dir=img_dir)
 
@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
     net = NeuralNetClassifier(module=create_net,
                               criterion=nn.CrossEntropyLoss,
-                              max_epochs = 30, # Reduced max_epochs for RandomSearch
+                              max_epochs = 10, # Reduced max_epochs for RandomSearch
                               lr = 1e-3, # Same opt_mom and lr as baseline model
                               optimizer__momentum = 0,
                               verbose = 1,
@@ -46,8 +46,8 @@ if __name__ == "__main__":
                               device = device,)
 
     params = {
-        "lr" : uniform(0.008, 0.02),
-        "optimizer__momentum" : uniform(0.7, 0.9),
+        "lr" : uniform(0.008, 0.012),
+        "optimizer__momentum" : uniform(0.7, 0.2),
         "batch_size" : [32],
         "optimizer__nesterov" : [True],
     }
