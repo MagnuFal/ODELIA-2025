@@ -47,7 +47,7 @@ if __name__ == "__main__":
 
     params = {
         "lr" : uniform(0.001, 0.1),
-        "optimizer__momentum" : uniform(0, 0.9),
+        "optimizer__momentum" : uniform(0, 1.5),
         "batch_size" : [8, 16, 32],
         "optimizer__nesterov" : [False, True],
     }
