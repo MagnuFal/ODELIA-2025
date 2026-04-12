@@ -11,6 +11,9 @@ import pickle
 from scipy.stats import uniform
 import torch.nn as nn
 import time
+import joblib
+import json
+import pandas as pd
 
 def create_net():
     return DenseNet121(spatial_dims = 3, in_channels = 8, out_channels = 3)
@@ -25,7 +28,9 @@ if __name__ == "__main__":
     #annotation_file = r"C:\Users\magfa\Documents\ODELIA-2025\RSH_dataset\annotation.csv"
     #img_dir = r"C:\Users\magfa\Documents\ODELIA-2025\RSH_dataset\RSH_np_arrays"
     #save_checkpoint_path = r"C:\Users\magfa\Documents\ODELIA-2025\checkpoints\skorch_run_1.pth"
-    save_checkpoint_path = r"/cluster/home/magnufal/TDT4265/checkpoints/skorch_run_fine_search.pt"
+    save_estimator_path = r"/cluster/home/magnufal/TDT4265/checkpoints/skorch_run_fine_search_attempt_2_12_04_best_estimator.pkl"
+    save_hyperparameter_path = r"/cluster/home/magnufal/TDT4265/checkpoints/skorch_run_fine_search_attempt_2_12_04_best_hyperparameters.json"
+    save_all_search_results_path = r"/cluster/home/magnufal/TDT4265/checkpoints/skorch_run_fine_search_attempt_2_12_04_all_search_results.csv"
 
     dataset = ODELIA_SKORCH_DATASET(annotation_file=annotation_file, img_dir=img_dir)
 
@@ -47,9 +52,9 @@ if __name__ == "__main__":
 
     params = {
         "lr" : uniform(0.008, 0.012),
-        "optimizer__momentum" : uniform(0.7, 0.2),
+        "optimizer__momentum" : uniform(0.6, 0.3),
         "batch_size" : [32],
-        "optimizer__nesterov" : [True],
+        "optimizer__nesterov" : [True, False],
     }
 
     rs = RandomizedSearchCV(net, params, n_iter=10, refit=True, cv=3, scoring="roc_auc_ovr", verbose = 2, n_jobs=1)
@@ -58,7 +63,13 @@ if __name__ == "__main__":
 
     print(f"Best Score: {rs.best_score_}, Best Parameters: {rs.best_params_}")
 
-    rs.best_estimator_.save_params(f_params=save_checkpoint_path)
+    joblib.dump(rs.best_estimator_, save_estimator_path)
+
+    with open(save_hyperparameter_path, "w") as f:
+        json.dump(rs.best_params_, f)
+
+    results_df = pd.DataFrame(rs.cv_results_)
+    results_df.to_csv(save_all_search_results_path, index=False)
 
     end_time = time.perf_counter()
 
