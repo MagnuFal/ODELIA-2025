@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from torch.optim import RMSprop
+from torch.optim import RMSprop, SGD
 from pathlib import Path
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -8,7 +8,7 @@ print(f"Using {device} device")
 
 def train(model, dataloader, learning_rate, batch_size, momentum, nesterov, weights = None):
     size = len(dataloader.dataset)
-    optimizer = RMSprop(model.parameters(), lr = learning_rate, momentum=momentum, nesterov = nesterov)
+    optimizer = SGD(model.parameters(), lr = learning_rate, momentum=momentum, nesterov = nesterov)
     model.train() 
     loss_fn = nn.CrossEntropyLoss(weights)
     for batch, (X, y, uid) in enumerate(dataloader):
