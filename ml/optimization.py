@@ -6,9 +6,9 @@ from pathlib import Path
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f"Using {device} device")
 
-def train(model, dataloader, learning_rate = 1e-3, batch_size = 8, weights = None):
+def train(model, dataloader, learning_rate, batch_size, momentum, nesterov, weights = None):
     size = len(dataloader.dataset)
-    optimizer = RMSprop(model.parameters(), lr = learning_rate)
+    optimizer = RMSprop(model.parameters(), lr = learning_rate, momentum=momentum, nesterov = nesterov)
     model.train() 
     loss_fn = nn.CrossEntropyLoss(weights)
     for batch, (X, y, uid) in enumerate(dataloader):
@@ -63,7 +63,7 @@ def save_best_model(model, epoch, opt_state, best_loss, save_path):
             "loss" : best_loss
             }, save_path)
 
-def optimizer_loop(model, train_loader, val_loader, save_path, epochs = 50):
+def optimizer_loop(model, train_loader, val_loader, save_path, momentum, nesterov, weights, epochs = 50, lr = 1e-3, batch_size = 32):
     best_val_loss = 0
     file_path = Path(save_path)
     loss_log = f"{file_path.stem}_loss_log.txt"
@@ -71,8 +71,8 @@ def optimizer_loop(model, train_loader, val_loader, save_path, epochs = 50):
         f.write(f"Epoch, Val_Loss, Train_Loss\n")
     for i in range(epochs):
         print(f"----------Epoch {i + 1}----------")
-        opt_state_dict, train_loss = train(model, train_loader)
-        val_loss, _ = test(model, val_loader, file_path)
+        opt_state_dict, train_loss = train(model, train_loader, learning_rate=lr, batch_size=batch_size, momentum=momentum, nesterov=nesterov, weights=weights)
+        val_loss, _ = test(model, val_loader, file_path, weights=weights)
         with open(loss_log, "a") as f:
             f.write(f"{i + 1}, {val_loss}, {train_loss}\n")
         if i == 0:

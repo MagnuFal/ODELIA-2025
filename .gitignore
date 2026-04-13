@@ -215,3 +215,5 @@ __marimo__/
 *.pth
 *.png
 *.pt
+*.pkl
+*.json

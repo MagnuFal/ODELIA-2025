@@ -11,7 +11,7 @@ if __name__ == "__main__":
 
     annotation_file = r"/cluster/home/magnufal/TDT4265/annotation_CAM_MHA_RUMC_UKA.csv"
     img_dir = r"/cluster/home/magnufal/TDT4265/training_data"
-    save_checkpoint_path = r"/cluster/home/magnufal/TDT4265/checkpoints/baseline.pth"
+    save_checkpoint_path = r"/cluster/home/magnufal/TDT4265/checkpoints/after_fine_search_13_04_26_300_epochs_and_new_hps.pth"
 
     dataset = ODELIA_DATASET(annotation_file=annotation_file, img_dir=img_dir)
 
@@ -22,11 +22,12 @@ if __name__ == "__main__":
 
     train_set, val_set = random_split(dataset, [n_train, n_val])
 
-    train_loader = DataLoader(train_set, shuffle=True, batch_size=8)
-    val_loader = DataLoader(val_set, shuffle=False, batch_size=8)
+    train_loader = DataLoader(train_set, shuffle=True, batch_size=32)
+    val_loader = DataLoader(val_set, shuffle=False, batch_size=32)
 
     model = DenseNet121(spatial_dims = 3, in_channels = 8, out_channels = 3, pretrained=False).to(device)
 
     weights = torch.tensor([0.477046, 3.319444, 1.659722]).to(device)
 
-    optimizer_loop(model=model, train_loader=train_loader, val_loader=val_loader, save_path=save_checkpoint_path, epochs=120)
+    optimizer_loop(model=model, train_loader=train_loader, val_loader=val_loader, save_path=save_checkpoint_path, epochs=300, lr=0.00999003371847893,
+                   momentum=0.7899161266614954, nesterov=True, weights=weights)
