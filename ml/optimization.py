@@ -63,7 +63,7 @@ def save_best_model(model, epoch, opt_state, best_loss, save_path):
             "loss" : best_loss
             }, save_path)
 
-def optimizer_loop(model, train_loader, val_loader, save_path, momentum, nesterov, weights, epochs = 50, lr = 1e-3, batch_size = 32):
+def optimizer_loop(model, train_loader, val_loader, save_path, momentum, nesterov, weights = None, epochs = 50, lr = 1e-3, batch_size = 8):
     best_val_loss = 0
     file_path = Path(save_path)
     loss_log = f"{file_path.stem}_loss_log.txt"
