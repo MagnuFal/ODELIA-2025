@@ -10,7 +10,7 @@ def train(model, dataloader, learning_rate, batch_size, momentum, nesterov, weig
     size = len(dataloader.dataset)
     optimizer = RMSprop(model.parameters(), lr = learning_rate, momentum=momentum)
     model.train() 
-    loss_fn = nn.CrossEntropyLoss(weights)
+    loss_fn = nn.CrossEntropyLoss(weights = weights)
     for batch, (X, y, uid) in enumerate(dataloader):
         X = X.to(device)
         y = y.to(device)
