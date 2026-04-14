@@ -27,7 +27,7 @@ if __name__ == "__main__":
 
     model = DenseNet121(spatial_dims = 3, in_channels = 8, out_channels = 3, pretrained=False).to(device)
 
-    checkpoint = torch.load(r"/cluster/home/magnufal/TDT4265/ODELIA-2025/checkpoints/baseline.pth", weights_only=True, map_location=device)
+    checkpoint = torch.load(r"/cluster/home/magnufal/TDT4265/checkpoints/baseline.pth", weights_only=True, map_location=device)
     model.load_state_dict(checkpoint['model_state_dict'])
 
     weights = torch.tensor([0.477046, 3.319444, 1.659722]).to(device)
