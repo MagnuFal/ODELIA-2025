@@ -31,7 +31,7 @@ def inference(model, dataloader, save_path):
 
     #txt_to_csv(rf"{save_path}\inference_probs.txt", rf"{save_path}\inference.csv")
     df = pd.DataFrame(lst)
-    df.to_csv(rf"{save_path}\inference_after_fine_search_13_04_26_300_epochs_and_new_hps_RMSprop.csv", index = False)
+    df.to_csv(rf"{save_path}\inference_from_baseline_weights_with_momentum.csv", index = False)
 
 if __name__ == "__main__":
     annotation_file = r"C:\Users\magfa\Documents\ODELIA-2025\RSH_dataset\annotation.csv"
@@ -43,7 +43,7 @@ if __name__ == "__main__":
 
     model = DenseNet121(spatial_dims = 3, in_channels = 8, out_channels = 3, pretrained=False).to(device)
 
-    checkpoint = torch.load(r"C:\Users\magfa\Documents\ODELIA-2025\checkpoints\after_fine_search_13_04_26_300_epochs_and_new_hps_RMSprop.pth", weights_only=True, map_location=torch.device('cpu'))
+    checkpoint = torch.load(r"C:\Users\magfa\Documents\ODELIA-2025\checkpoints\from_baseline_weights_with_momentum.pth", weights_only=True, map_location=torch.device('cpu'))
     model.load_state_dict(checkpoint['model_state_dict'])
 
-    #inference(model=model, dataloader=test_loader, save_path=r"C:\Users\magfa\Documents\ODELIA-2025\RSH_Inference")
+    inference(model=model, dataloader=test_loader, save_path=r"C:\Users\magfa\Documents\ODELIA-2025\RSH_Inference")
