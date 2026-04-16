@@ -27,9 +27,11 @@ class ODELIA_DATASET(Dataset):
             arr = np.concatenate([arr, padding], axis=0)
 
         if self.transforms:
-            data = {"image" : arr}
-            transform_data = self.transforms(data)
-            arr = np.asarray(transform_data["image"])
+            for i in range(len(arr.shape[0])):
+                volume = arr[i, :, :, :]
+                data = {"image" : volume}
+                transform_data = self.transforms(data)
+                arr[i, :, :, :] = np.asarray(transform_data["image"])
 
         image = torch.from_numpy(arr).float()
         label = self.image_labels.iloc[index, -1]
