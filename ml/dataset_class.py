@@ -12,7 +12,7 @@ class ODELIA_DATASET(Dataset):
         self.img_dir = img_dir
         self.transforms = Compose([
             RandFlipd(keys = ["image"], spatial_axis = (2, 3), prob=0.5),
-            RandRotate90d(keys = ["image"], spatial_axis = (2, 3), prob=0.5),
+            RandRotate90d(keys = ["image"], prob=0.5),
             RandZoomd(keys = ["image"], spatial_axis = (2, 3), prob = 0.5),
         ])
 
