@@ -30,7 +30,7 @@ class ODELIA_DATASET(Dataset):
         if self.transforms:
             data = {"image" : arr}
             transform_data = self.transforms(data)
-            arr = transform_data["image"]
+            arr = np.asarray(transform_data["image"])
 
         image = torch.from_numpy(arr).float()
         label = self.image_labels.iloc[index, -1]
