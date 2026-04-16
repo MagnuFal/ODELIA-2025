@@ -11,7 +11,7 @@ if __name__ == "__main__":
 
     annotation_file = r"/cluster/home/magnufal/TDT4265/annotation_CAM_MHA_RUMC_UKA.csv"
     img_dir = r"/cluster/home/magnufal/TDT4265/training_data"
-    save_checkpoint_path = r"/cluster/home/magnufal/TDT4265/checkpoints/DenseNet264.pth"
+    save_checkpoint_path = r"/cluster/home/magnufal/TDT4265/checkpoints/new_padding_and_augmentations_from_baseline.pth"
 
     dataset = ODELIA_DATASET(annotation_file=annotation_file, img_dir=img_dir)
 
@@ -25,11 +25,11 @@ if __name__ == "__main__":
     train_loader = DataLoader(train_set, shuffle=True, batch_size=8)
     val_loader = DataLoader(val_set, shuffle=False, batch_size=8)
 
-    #model = DenseNet121(spatial_dims = 3, in_channels = 8, out_channels = 3, pretrained=False).to(device)
-    model = DenseNet264(spatial_dims = 3, in_channels = 8, out_channels = 3, pretrained=False).to(device)
+    model = DenseNet121(spatial_dims = 3, in_channels = 8, out_channels = 3, pretrained=False).to(device)
+    #model = DenseNet264(spatial_dims = 3, in_channels = 8, out_channels = 3, pretrained=False).to(device)
 
-    #checkpoint = torch.load(r"/cluster/home/magnufal/TDT4265/checkpoints/baseline.pth", weights_only=True, map_location=device)
-    #model.load_state_dict(checkpoint['model_state_dict'])
+    checkpoint = torch.load(r"/cluster/home/magnufal/TDT4265/checkpoints/baseline.pth", weights_only=True, map_location=device)
+    model.load_state_dict(checkpoint['model_state_dict'])
 
     weights = torch.tensor([0.477046, 3.319444, 1.659722]).to(device)
 
