@@ -27,7 +27,7 @@ class ODELIA_DATASET(Dataset):
             arr = np.concatenate([arr, padding], axis=0)
 
         if self.transforms:
-            for i in range(len(arr.shape[0])):
+            for i in range(arr.shape[0]):
                 volume = arr[i, :, :, :]
                 data = {"image" : volume}
                 transform_data = self.transforms(data)
