@@ -3,6 +3,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 import pandas as pd
+import os
 
 def number_of_channels(path_to_nii_gz):
     img = nib.load(path_to_nii_gz)
@@ -61,6 +62,18 @@ def make_arb_annotation_RSH(RSH_folder_path, save_folder_path):
     df = pd.DataFrame(lst)
     df.to_csv(rf"{save_folder_path}", index = False)
 
+def reshape_data_in_folder(folder_path, save_folder_path):
+    folder = Path(folder_path)
+
+    for file in folder.iterdir():
+        arr = np.load(file)
+        arr = np.reshape(arr, (arr.shape[0]*arr.shape[1], arr.shape[2], arr.shape[3]))
+        difference_in_scans = 256 - arr.shape[0]
+        if difference_in_scans > 0:
+            padding = np.zeros((difference_in_scans, 256, 256))
+            arr = np.concatenate([arr, padding], axis=0)
+        np.save(os.path.join(save_folder_path + file.name), arr)
+
 if __name__ == "__main__":
     #anno1 = r"C:\Users\magfa\Documents\ODELIA-2025\odelia_dataset\CAM\metadata_unilateral\annotation.csv"
     #anno2 = r"C:\Users\magfa\Documents\ODELIA-2025\odelia_dataset\MHA\metadata_unilateral\annotation.csv"
@@ -75,4 +88,4 @@ if __name__ == "__main__":
 #
     #df7.to_csv(r"C:\Users\magfa\Documents\ODELIA-2025\annotation_CAM_MHA_RUMC_UKA.csv", index = False)
 
-    make_arb_annotation_RSH(r"C:\Users\magfa\Documents\ODELIA-2025\RSH_dataset\RSH_np_arrays", r"C:\Users\magfa\Documents\ODELIA-2025\RSH_dataset\annotation.csv")
+    reshape_data_in_folder(r"/cluster/home/magnufal/TDT4265/ODELIA-2025/training_data", r"/cluster/home/magnufal/TDT4265/ODELIA-2025/training_data_reshaped_and_padded")
