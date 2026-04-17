@@ -34,6 +34,8 @@ class ODELIA_DATASET(Dataset):
             transform_data = self.transforms(data)
             arr = np.asarray(transform_data["image"])
 
+        arr = arr[np.newaxis, ...]
+
         image = torch.from_numpy(arr).float()
         label = self.image_labels.iloc[index, -1]
         label = torch.tensor(label, dtype=torch.long)
