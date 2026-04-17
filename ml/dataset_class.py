@@ -27,7 +27,6 @@ class ODELIA_DATASET(Dataset):
         if difference_in_scans > 0:
             padding = np.zeros((difference_in_scans, 256, 256))
             arr = np.concatenate([arr, padding], axis=0)
-        arr = np.reshape(arr, (arr.shape[0]*arr.shape[1], arr.shape[2], arr.shape[3]))
 
         if self.transforms:
             volume = arr
