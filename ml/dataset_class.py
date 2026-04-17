@@ -4,7 +4,7 @@ import os
 from torchvision.io import decode_image
 import numpy as np
 import torch
-from monai.transforms import Compose, RandFlipd, RandRotate90d, RandGaussianNoised
+from monai.transforms import Compose, RandFlipd, RandRotate90d, RandGaussianNoised, Resized
 
 class ODELIA_DATASET(Dataset):
     def __init__(self, annotation_file, img_dir):
@@ -14,6 +14,7 @@ class ODELIA_DATASET(Dataset):
             RandFlipd(keys = ["image"], prob=0.5),
             RandRotate90d(keys = ["image"], prob=0.5),
             RandGaussianNoised(keys = ["image"], prob = 1),
+            Resized(keys=["image"], spatial_size=(64, 128, 128), prob = 1),
         ])
 
     def __len__(self):
