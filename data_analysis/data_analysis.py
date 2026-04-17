@@ -72,7 +72,7 @@ def reshape_data_in_folder(folder_path, save_folder_path):
         if difference_in_scans > 0:
             padding = np.zeros((difference_in_scans, 256, 256))
             arr = np.concatenate([arr, padding], axis=0)
-        np.save(os.path.join(save_folder_path + file.name), arr)
+        np.save(os.path.join(save_folder_path, file.name), arr)
 
 if __name__ == "__main__":
     #anno1 = r"C:\Users\magfa\Documents\ODELIA-2025\odelia_dataset\CAM\metadata_unilateral\annotation.csv"
