@@ -88,4 +88,4 @@ if __name__ == "__main__":
 #
     #df7.to_csv(r"C:\Users\magfa\Documents\ODELIA-2025\annotation_CAM_MHA_RUMC_UKA.csv", index = False)
 
-    reshape_data_in_folder(r"/cluster/home/magnufal/TDT4265/ODELIA-2025/training_data", r"/cluster/home/magnufal/TDT4265/ODELIA-2025/training_data_reshaped_and_padded")
+    reshape_data_in_folder(r"/cluster/home/magnufal/TDT4265/training_data", r"/cluster/home/magnufal/TDT4265/training_data_reshaped_and_padded")
