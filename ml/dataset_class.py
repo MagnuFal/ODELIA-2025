@@ -23,11 +23,6 @@ class ODELIA_DATASET(Dataset):
     def __getitem__(self, index):
         img_path = os.path.join(self.img_dir, self.image_labels.iloc[index, 0] + ".npy")
         arr = np.load(img_path)
-        arr = np.reshape(arr, (arr.shape[0]*arr.shape[1], arr.shape[2], arr.shape[3]))
-        difference_in_scans = 256 - arr.shape[0]
-        if difference_in_scans > 0:
-            padding = np.zeros((difference_in_scans, 256, 256))
-            arr = np.concatenate([arr, padding], axis=0)
 
         if self.transforms:
             volume = arr
