@@ -25,7 +25,7 @@ if __name__ == "__main__":
     train_loader = DataLoader(train_set, shuffle=True, batch_size=8)
     val_loader = DataLoader(val_set, shuffle=False, batch_size=8)
 
-    model = DenseNet121(spatial_dims = 3, in_channels = 8, out_channels = 3, pretrained=False).to(device)
+    model = DenseNet121(spatial_dims = 3, in_channels = 1, out_channels = 3, pretrained=False).to(device)
     #model = DenseNet264(spatial_dims = 3, in_channels = 8, out_channels = 3, pretrained=False).to(device)
 
     #checkpoint = torch.load(r"/cluster/home/magnufal/TDT4265/checkpoints/baseline.pth", weights_only=True, map_location=device)
