@@ -10,7 +10,7 @@ if __name__ == "__main__":
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     annotation_file = r"/cluster/home/magnufal/TDT4265/annotation_CAM_MHA_RUMC_UKA.csv"
-    img_dir = r"/cluster/home/magnufal/TDT4265/training_data"
+    img_dir = r"/cluster/home/magnufal/TDT4265/training_data_reshaped_and_padded"
     save_checkpoint_path = r"/cluster/home/magnufal/TDT4265/checkpoints/new_data_representation_and_paper_training_params.pth"
 
     dataset = ODELIA_DATASET(annotation_file=annotation_file, img_dir=img_dir)
