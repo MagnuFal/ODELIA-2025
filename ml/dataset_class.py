@@ -4,7 +4,7 @@ import os
 from torchvision.io import decode_image
 import numpy as np
 import torch
-from monai.transforms import Compose, RandFlipd, RandRotate90d, RandZoomd
+from monai.transforms import Compose, RandFlipd, RandRotate90d, RandGaussianNoised
 
 class ODELIA_DATASET(Dataset):
     def __init__(self, annotation_file, img_dir):
@@ -13,6 +13,7 @@ class ODELIA_DATASET(Dataset):
         self.transforms = Compose([
             RandFlipd(keys = ["image"], prob=0.5),
             RandRotate90d(keys = ["image"], prob=0.5),
+            RandGaussianNoised(keys = ["image"], prob = 1),
         ])
 
     def __len__(self):
@@ -21,17 +22,17 @@ class ODELIA_DATASET(Dataset):
     def __getitem__(self, index):
         img_path = os.path.join(self.img_dir, self.image_labels.iloc[index, 0] + ".npy")
         arr = np.load(img_path)
-        difference_in_scans = 8 - arr.shape[0]
-        if difference_in_scans != 0:
-            padding = np.repeat(arr[-1:, :, :, :], difference_in_scans, axis = 0)
-            arr = np.concatenate([arr, padding], axis=0)
+        #difference_in_scans = 8 - arr.shape[0]
+        #if difference_in_scans != 0:
+        #    padding = np.repeat(arr[-1:, :, :, :], difference_in_scans, axis = 0)
+        #    arr = np.concatenate([arr, padding], axis=0)
+        arr = np.reshape(arr, (arr.shape[0]*arr.shape[1], arr.shape[2], arr.shape[3]))
 
         if self.transforms:
-            for i in range(arr.shape[0]):
-                volume = arr[i, :, :, :]
-                data = {"image" : volume}
-                transform_data = self.transforms(data)
-                arr[i, :, :, :] = np.asarray(transform_data["image"])
+            volume = arr
+            data = {"image" : volume}
+            transform_data = self.transforms(data)
+            arr = np.asarray(transform_data["image"])
 
         image = torch.from_numpy(arr).float()
         label = self.image_labels.iloc[index, -1]

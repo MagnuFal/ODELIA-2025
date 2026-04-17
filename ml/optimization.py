@@ -8,9 +8,9 @@ print(f"Using {device} device")
 
 def train(model, dataloader, learning_rate, batch_size, momentum, nesterov, weights = None):
     size = len(dataloader.dataset)
-    optimizer = RMSprop(model.parameters(), lr = learning_rate, momentum=momentum)
+    optimizer = SGD(model.parameters(), lr = learning_rate, momentum=momentum, nesterov=nesterov, weight_decay=1e-4)
     model.train() 
-    loss_fn = nn.CrossEntropyLoss()
+    loss_fn = nn.CrossEntropyLoss(weight=weights)
     for batch, (X, y, uid) in enumerate(dataloader):
         X = X.to(device)
         y = y.to(device)
@@ -29,7 +29,7 @@ def train(model, dataloader, learning_rate, batch_size, momentum, nesterov, weig
 
 def test(model, dataloader, save_path, weights = None):
     model.eval()
-    loss_fn = nn.CrossEntropyLoss(weights)
+    loss_fn = nn.CrossEntropyLoss(weight=weights)
     size = len(dataloader.dataset)
     num_batches = len(dataloader)
     test_loss, correct = 0, 0
