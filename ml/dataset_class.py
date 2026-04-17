@@ -14,7 +14,7 @@ class ODELIA_DATASET(Dataset):
             RandFlipd(keys = ["image"], prob=0.5),
             RandRotate90d(keys = ["image"], prob=0.5),
             RandGaussianNoised(keys = ["image"], prob = 1),
-            Resized(keys=["image"], spatial_size=(64, 128, 128)),
+            #Resized(keys=["image"], spatial_size=(64, 128, 128)),
         ])
 
     def __len__(self):
