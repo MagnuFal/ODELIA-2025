@@ -31,19 +31,19 @@ def inference(model, dataloader, save_path):
 
     #txt_to_csv(rf"{save_path}\inference_probs.txt", rf"{save_path}\inference.csv")
     df = pd.DataFrame(lst)
-    df.to_csv(rf"{save_path}\new_data_representation_and_paper_training_params.csv", index = False)
+    df.to_csv(rf"{save_path}\DenseNet121_from_scratch_with_class_weights.csv", index = False)
 
 if __name__ == "__main__":
     annotation_file = r"C:\Users\magfa\Documents\ODELIA-2025\RSH_dataset\annotation.csv"
-    img_dir = r"C:\Users\magfa\Documents\ODELIA-2025\RSH_dataset\RSH_np_arrays_reshaped"
+    img_dir = r"C:\Users\magfa\Documents\ODELIA-2025\RSH_dataset\RSH_np_arrays"
 
     dataset = ODELIA_DATASET(annotation_file=annotation_file, img_dir=img_dir)
 
     test_loader = DataLoader(dataset, shuffle=False, batch_size=1)
 
-    model = DenseNet121(spatial_dims = 3, in_channels = 1, out_channels = 3, pretrained=False).to(device)
+    model = DenseNet121(spatial_dims = 3, in_channels = 8, out_channels = 3, pretrained=False).to(device)
 
-    checkpoint = torch.load(r"C:\Users\magfa\Documents\ODELIA-2025\checkpoints\new_data_representation_and_paper_training_params.pth", weights_only=True, map_location=torch.device('cpu'))
+    checkpoint = torch.load(r"C:\Users\magfa\Documents\ODELIA-2025\checkpoints\DenseNet121_from_scratch_with_class_weights.pth", weights_only=True, map_location=torch.device('cpu'))
     model.load_state_dict(checkpoint['model_state_dict'])
 
     inference(model=model, dataloader=test_loader, save_path=r"C:\Users\magfa\Documents\ODELIA-2025\RSH_Inference")
