@@ -28,9 +28,9 @@ if __name__ == "__main__":
     #annotation_file = r"C:\Users\magfa\Documents\ODELIA-2025\RSH_dataset\annotation.csv"
     #img_dir = r"C:\Users\magfa\Documents\ODELIA-2025\RSH_dataset\RSH_np_arrays"
     #save_checkpoint_path = r"C:\Users\magfa\Documents\ODELIA-2025\checkpoints\skorch_run_1.pth"
-    save_estimator_path = r"/cluster/home/magnufal/TDT4265/checkpoints/skorch_run_fine_search_attempt_2_12_04_best_estimator.pkl"
-    save_hyperparameter_path = r"/cluster/home/magnufal/TDT4265/checkpoints/skorch_run_fine_search_attempt_2_12_04_best_hyperparameters.json"
-    save_all_search_results_path = r"/cluster/home/magnufal/TDT4265/checkpoints/skorch_run_fine_search_attempt_2_12_04_all_search_results.csv"
+    save_estimator_path = r"/cluster/home/magnufal/TDT4265/checkpoints/skorch_run_last_attempt_18_04_best_estimator.pkl"
+    save_hyperparameter_path = r"/cluster/home/magnufal/TDT4265/checkpoints/skorch_run_last_attempt_18_04_best_hyperparameters.json"
+    save_all_search_results_path = r"/cluster/home/magnufal/TDT4265/checkpoints/skorch_run_last_attempt_18_04_all_search_results.csv"
 
     dataset = ODELIA_SKORCH_DATASET(annotation_file=annotation_file, img_dir=img_dir)
 
@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
     net = NeuralNetClassifier(module=create_net,
                               criterion=nn.CrossEntropyLoss,
-                              max_epochs = 10, # Reduced max_epochs for RandomSearch
+                              max_epochs = 120, # Reduced max_epochs for RandomSearch
                               lr = 1e-3, # Same opt_mom and lr as baseline model
                               optimizer__momentum = 0,
                               verbose = 1,
@@ -51,13 +51,13 @@ if __name__ == "__main__":
                               device = device,)
 
     params = {
-        "lr" : uniform(0.008, 0.012),
-        "optimizer__momentum" : uniform(0.6, 0.3),
+        "lr" : [0.01403188298674226],
+        "optimizer__momentum" : [0.8745764689445047],
         "batch_size" : [32],
-        "optimizer__nesterov" : [True, False],
+        "optimizer__nesterov" : [True],
     }
 
-    rs = RandomizedSearchCV(net, params, n_iter=10, refit=True, cv=3, scoring="roc_auc_ovr", verbose = 2, n_jobs=1)
+    rs = RandomizedSearchCV(net, params, n_iter=1, refit=True, cv=3, scoring="roc_auc_ovr", verbose = 2, n_jobs=1)
 
     rs.fit(X_sl, y_sl)
 

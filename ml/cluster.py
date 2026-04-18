@@ -10,8 +10,8 @@ if __name__ == "__main__":
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     annotation_file = r"/cluster/home/magnufal/TDT4265/annotation_CAM_MHA_RUMC_UKA.csv"
-    img_dir = r"/cluster/home/magnufal/TDT4265/training_data_reshaped_and_padded"
-    save_checkpoint_path = r"/cluster/home/magnufal/TDT4265/checkpoints/new_data_representation_and_paper_training_params_continued_with_batch_size_1.pth"
+    img_dir = r"/cluster/home/magnufal/TDT4265/training_data"
+    save_checkpoint_path = r"/cluster/home/magnufal/TDT4265/checkpoints/DenseNet121_from_scratch_with_class_weights.pth"
 
     dataset = ODELIA_DATASET(annotation_file=annotation_file, img_dir=img_dir)
 
@@ -22,16 +22,16 @@ if __name__ == "__main__":
 
     train_set, val_set = random_split(dataset, [n_train, n_val])
 
-    train_loader = DataLoader(train_set, shuffle=True, batch_size=1)
-    val_loader = DataLoader(val_set, shuffle=False, batch_size=1)
+    train_loader = DataLoader(train_set, shuffle=True, batch_size=8)
+    val_loader = DataLoader(val_set, shuffle=False, batch_size=8)
 
-    model = DenseNet121(spatial_dims = 3, in_channels = 1, out_channels = 3, pretrained=False).to(device)
+    model = DenseNet121(spatial_dims = 3, in_channels = 8, out_channels = 3, pretrained=False).to(device)
     #model = DenseNet264(spatial_dims = 3, in_channels = 8, out_channels = 3, pretrained=False).to(device)
 
-    checkpoint = torch.load(r"/cluster/home/magnufal/TDT4265/checkpoints/new_data_representation_and_paper_training_params.pth", weights_only=True, map_location=device)
-    model.load_state_dict(checkpoint['model_state_dict'])
+    #checkpoint = torch.load(r"/cluster/home/magnufal/TDT4265/checkpoints/new_data_representation_and_paper_training_params.pth", weights_only=True, map_location=device)
+    #model.load_state_dict(checkpoint['model_state_dict'])
 
     weights = torch.tensor([0.477046, 3.319444, 1.659722]).to(device)
 
     optimizer_loop(model=model, train_loader=train_loader, val_loader=val_loader, save_path=save_checkpoint_path, epochs=120, lr=1e-3,
-                   momentum=0.9, nesterov=True, weights=weights)
+                   momentum=0, nesterov=False, weights=weights)

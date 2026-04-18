@@ -8,7 +8,7 @@ print(f"Using {device} device")
 
 def train(model, dataloader, learning_rate, batch_size, momentum, nesterov, weights = None):
     size = len(dataloader.dataset)
-    optimizer = SGD(model.parameters(), lr = learning_rate, momentum=momentum, nesterov=nesterov, weight_decay=1e-4)
+    optimizer = RMSprop(model.parameters(), lr = learning_rate)
     model.train() 
     loss_fn = nn.CrossEntropyLoss(weight=weights)
     for batch, (X, y, uid) in enumerate(dataloader):
